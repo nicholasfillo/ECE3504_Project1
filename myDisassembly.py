@@ -66,8 +66,8 @@ with open(input_file) as infile:
                     output_file.close()
             #I type
             else:
-                #Load or Store Instruction
-                if itype_dict[binary_data[0:6]] == 'lw' or itype_dict[binary_data[0:6]] == 'sw' or itype_dict[binary_data[0:6]] == 'lbu' or itype_dict[binary_data[0:6]] == ' lhu' or itype_dict[binary_data[0:6]] == 'sb' or itype_dict[binary_data[0:6]] == 'sh' or itype_dict[binary_data[0:6]] == 'sc' or itype_dict[binary_data[0:6]] == 'll':
+                #Load or Store Instruction (signed)
+                if itype_dict[binary_data[0:6]] == 'lw' or itype_dict[binary_data[0:6]] == 'sw' or itype_dict[binary_data[0:6]] == 'sb' or itype_dict[binary_data[0:6]] == 'sh' or itype_dict[binary_data[0:6]] == 'sc' or itype_dict[binary_data[0:6]] == 'll':
                     #The immediate values are signed so it is necessary to check the most signifigant bit of the immediate value
                     if binary_data[16] == '0':
                         mips_instruction = ("    " + itype_dict[binary_data[0:6]] + " " + bin_dict[binary_data[11:16]] + ", " + str(int(binary_data[16:32], 2)) + "(" + bin_dict[binary_data[6:11]] + ")")
@@ -81,6 +81,12 @@ with open(input_file) as infile:
                         output_file = open(output_file_string, "a")
                         output_file.write(mips_instruction + "\n")
                         output_file.close()
+                #load instructions (unsigned)
+                elif itype_dict[binary_data[0:6]] == 'lbu' or itype_dict[binary_data[0:6]] == 'lhu':
+                    mips_instruction = ("    " + itype_dict[binary_data[0:6]] + " " + bin_dict[binary_data[11:16]] + ", " + str(int(binary_data[16:32], 2)) + "(" + bin_dict[binary_data[6:11]] + ")")
+                    output_file = open(output_file_string, "a")
+                    output_file.write(mips_instruction + "\n")
+                    output_file.close()
                 #BEQ or BNE instructon
                 elif itype_dict[binary_data[0:6]] == 'beq' or itype_dict[binary_data[0:6]] == 'bne':
                     if binary_data[16] == '0':

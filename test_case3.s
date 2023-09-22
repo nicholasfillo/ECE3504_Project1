@@ -22,3 +22,4 @@ Addr_0044:
     andi $t7, $t8, 256
     ori $t8, $t7, 3916
     addi $t8, $t7, 3916
+    beq $t1, $t2, Addr_0000

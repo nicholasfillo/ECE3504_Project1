@@ -44,7 +44,12 @@ with open(input_file) as infile:
 
         #Convert Hex Data to Binary Data
         for hex_digit in hex_data[0:8]:
-            binary_data += hex_dict[hex_digit]
+            #checks if less than 8 hex digits and also that it doesnt contain garbage characters
+            if hex_dict.get(hex_digit) == None:
+                write_to_file = False
+                break
+            else:
+                binary_data += hex_dict[hex_digit]
 
         #This if statement checks if there is an error and prints an error message corresponding to the hex instruction as well as the line number
         if (itype_dict.get(binary_data[0:6]) == None and binary_data[0:6] != '000000') or (rtype_dict.get(binary_data[26:32]) == None and binary_data[0:6] == '000000') or (binary_data.__len__() != 32) or hex_data[8] != '\n':
@@ -93,6 +98,7 @@ with open(input_file) as infile:
                     if binary_data[16] == '0':
                         branch = int(binary_data[16:32], 2) * 4
                         branch = branch + count
+                        #store the line number in which the address should be inputed into the output file in an array
                         address_location_array.append(int(branch/4))
                         hex_branch = hex(branch)
                         if len(hex_branch) == 3:
@@ -136,6 +142,7 @@ with open(input_file) as infile:
                     output_file = open(output_file_string, "a")
                     output_file.write(mips_instruction + "\n")
                     output_file.close()
+                #Addi and slti signed instruction
                 elif (itype_dict[binary_data[0:6]] == 'addi' or itype_dict[binary_data[0:6]] == 'slti') and binary_data[16] == '1':
                     ones_complement = ''.join('1' if bit == '0' else '0' for bit in binary_data[16:32])
                     twos_complement_decimal = int(ones_complement, 2) + 1 
@@ -143,11 +150,13 @@ with open(input_file) as infile:
                     output_file = open(output_file_string, "a")
                     output_file.write(mips_instruction + "\n")
                     output_file.close()
+                #All other i type instructions should have immediates that are unsigned (ori, andi, sltiu)
                 else:
                     mips_instruction = ("    " + itype_dict[binary_data[0:6]] + " " + bin_dict[binary_data[11:16]] + ", " + bin_dict[binary_data[6:11]] + ", " + str(int(binary_data[16:32], 2)))
                     output_file = open(output_file_string, "a")
                     output_file.write(mips_instruction + "\n")
                     output_file.close()
+        #PC incremented
         count += 4
 
 #sort and reverse both arrays so that the largest value is first

@@ -8,6 +8,7 @@
 ##########################################################################################################################################################
 
 #Note: In order to run this code change the input_file to the .obj file being read in and the output_file_string to the .s file that is being written to
+#      Then just run "python myDissassembly.py"
 input_file = "test_case3.obj"
 output_file_string = "test_case3.s"
 
@@ -46,7 +47,7 @@ with open(input_file) as infile:
             binary_data += hex_dict[hex_digit]
 
         #This if statement checks if there is an error and prints an error message corresponding to the hex instruction as well as the line number
-        if (itype_dict.get(binary_data[0:6]) == None and binary_data[0:6] != '000000') or (rtype_dict.get(binary_data[26:32]) == None and binary_data[0:6] == '000000') or (binary_data.__len__() != 32):
+        if (itype_dict.get(binary_data[0:6]) == None and binary_data[0:6] != '000000') or (rtype_dict.get(binary_data[26:32]) == None and binary_data[0:6] == '000000') or (binary_data.__len__() != 32) or hex_data[8] != '\n':
             print("ERROR: Cannot Disassemble " + hex_data.rstrip("\n") + " at line " + str(int(count/4)))
             write_to_file = False
         else:
